@@ -6,6 +6,17 @@
 # <http://www.fileformat.info/info/unicode/category/index.htm>.
 #
 module Greeb::Tokenizer extend self
+  LI = /[\p{L}]+ ли/u
+  NI = /н[ие] [\p{L}]+/u
+  Bb1 = /[\p{L}]+ бы?/u
+  GEG = /[\p{L}]+ жеж?/u
+  KA = /[\p{L}]+[\- ]ка/u
+  TO = /[\p{L}]+[\- ]то/u
+  TAKI = /вс[её] ?- ?таки/u
+  HAPPINESS = /\:\)+/u
+  SAD = /\:\(+/u
+  HAPPINESS2 = /\:D/u
+
   # English and Russian letters.
   #
   LETTERS = /[\p{L}]+/u
@@ -52,6 +63,16 @@ module Greeb::Tokenizer extend self
     scanner = Greeb::StringScanner.new(text)
     tokens = []
     while !scanner.eos?
+      parse! scanner, tokens, LI, :letter or
+      parse! scanner, tokens, NI, :letter or
+      parse! scanner, tokens, Bb1, :letter or
+      parse! scanner, tokens, GEG, :letter or
+      parse! scanner, tokens, KA, :letter or
+      parse! scanner, tokens, TO, :letter or
+      parse! scanner, tokens, TAKI, :letter or
+      parse! scanner, tokens, HAPPINESS, :letter or
+      parse! scanner, tokens, SAD, :letter or
+      parse! scanner, tokens, HAPPINESS2, :letter or
       parse! scanner, tokens, LETTERS, :letter or
       parse! scanner, tokens, FLOATS, :float or
       parse! scanner, tokens, INTEGERS, :integer or
