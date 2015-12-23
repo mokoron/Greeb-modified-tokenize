@@ -1,21 +1,21 @@
 # encoding: utf-8
-
+require 'json'
 # Greeb's tokenization facilities. Use 'em with love. 
 #
 # Unicode character categories been obtained from
 # <http://www.fileformat.info/info/unicode/category/index.htm>.
 #
 module Greeb::Tokenizer extend self
-  LI = /[\p{L}]+ ли/u
-  NI = /н[ие] [\p{L}]+/u
-  Bb1 = /[\p{L}]+ бы?/u
-  GEG = /[\p{L}]+ жеж?/u
-  KA = /[\p{L}]+[\- ]ка/u
-  TO = /[\p{L}]+[\- ]то/u
-  TAKI = /вс[её] ?- ?таки/u
+  LI = /([\p{L}]+ ли)(?<no-caprute>\p{^L})/u
+  NI = /(н[ие] [\p{L}]+)(?<no-caprute>\p{^L})/u
+  Bb1 = /([\p{L}]+ бы?)(?<no-caprute>\p{^L})/u
+  GEG = /([\p{L}]+ жеж?)(?<no-caprute>\p{^L})/u
+  KA = /([\p{L}]+[\- ]ка)(?<no-caprute>\p{^L})/u
+  TO = /([\p{L}]+[\- ]то)(?<no-caprute>\p{^L})/u
+  TAKI = /(вс[её] ?- ?таки)(?<no-caprute>\p{^L})/u
   HAPPINESS = /\:\)+/u
   SAD = /\:\(+/u
-  HAPPINESS2 = /\:D/u
+  HAPPINESS2 = /\:D+/u
 
   # English and Russian letters.
   #
@@ -117,6 +117,14 @@ module Greeb::Tokenizer extend self
   #
   def parse! scanner, tokens, pattern, type
     return false unless token = scanner.scan(pattern)
+    noCapture = scanner['no-caprute']
+    position = scanner.char_pos - noCapture.length
+    token = token[0,token.length - noCapture.length]
+    scanner.pos = scanner.pos - noCapture.length
+    tokens << Greeb::Span.new(position - token.length,
+                                position,
+                                type)
+  rescue IndexError
     position = scanner.char_pos
     tokens << Greeb::Span.new(position - token.length,
                                 position,
