@@ -6,13 +6,13 @@ require 'json'
 # <http://www.fileformat.info/info/unicode/category/index.htm>.
 #
 module Greeb::Tokenizer extend self
-  LI = /([\p{L}]+ ли)(?<no-caprute>\p{^L})/u
-  NI = /(н[ие] [\p{L}]+)(?<no-caprute>\p{^L})/u
-  Bb1 = /([\p{L}]+ бы?)(?<no-caprute>\p{^L})/u
-  GEG = /([\p{L}]+ жеж?)(?<no-caprute>\p{^L})/u
-  KA = /([\p{L}]+[\- ]ка)(?<no-caprute>\p{^L})/u
-  TO = /([\p{L}]+[\- ]то)(?<no-caprute>\p{^L})/u
-  TAKI = /(вс[её] ?- ?таки)(?<no-caprute>\p{^L})/u
+  LI = /([\p{L}]+ ли)\b/u
+  NI = /(н[ие] [\p{L}]+)\b/u
+  Bb1 = /([\p{L}]+ бы?)\b/u
+  GEG = /([\p{L}]+ жеж?)\b/u
+  KA = /([\p{L}]+[\- ]ка)\b/u
+  TO = /([\p{L}]+[\- ]то)\b/u
+  TAKI = /(вс[её] ?- ?таки)\b/u
   DATE = /(\d?\d[\.\/]\d?\d[\/ \.]\d{4}|\d?\d[\/ \.]\d?\d[\/ \.]\d{2})/
   DATE2 = /(\d?\d[\/ \.](янв|февр|мар|апр|май|июн|июл|авг|сент|окт|ноя|дек)[\p{L}]{0,4}[\/ \.](\d{4}|\d{2}))/
   TIME = /\d?\d[\.\:]\d?\d/
@@ -123,14 +123,6 @@ module Greeb::Tokenizer extend self
   #
   def parse! scanner, tokens, pattern, type
     return false unless token = scanner.scan(pattern)
-    noCapture = scanner['no-caprute']
-    position = scanner.char_pos - noCapture.length
-    token = token[0,token.length - noCapture.length]
-    scanner.pos = scanner.pos - noCapture.length
-    tokens << Greeb::Span.new(position - token.length,
-                                position,
-                                type)
-  rescue IndexError
     position = scanner.char_pos
     tokens << Greeb::Span.new(position - token.length,
                                 position,
