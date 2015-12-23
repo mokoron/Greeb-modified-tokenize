@@ -13,6 +13,9 @@ module Greeb::Tokenizer extend self
   KA = /([\p{L}]+[\- ]ка)(?<no-caprute>\p{^L})/u
   TO = /([\p{L}]+[\- ]то)(?<no-caprute>\p{^L})/u
   TAKI = /(вс[её] ?- ?таки)(?<no-caprute>\p{^L})/u
+  DATE = /(\d?\d[\.\/]\d?\d[\/ \.]\d{4}|\d?\d[\/ \.]\d?\d[\/ \.]\d{2})/
+  DATE2 = /(\d?\d[\/ \.](янв|февр|мар|апр|май|июн|июл|авг|сент|окт|ноя|дек)[\p{L}]{0,4}[\/ \.](\d{4}|\d{2}))/
+  TIME = /\d?\d[\.\:]\d?\d/
   HAPPINESS = /\:\)+/u
   SAD = /\:\(+/u
   HAPPINESS2 = /\:D+/u
@@ -73,6 +76,9 @@ module Greeb::Tokenizer extend self
       parse! scanner, tokens, HAPPINESS, :letter or
       parse! scanner, tokens, SAD, :letter or
       parse! scanner, tokens, HAPPINESS2, :letter or
+      parse! scanner, tokens, DATE, :letter or
+      parse! scanner, tokens, DATE2, :letter or
+      parse! scanner, tokens, TIME, :letter or
       parse! scanner, tokens, LETTERS, :letter or
       parse! scanner, tokens, FLOATS, :float or
       parse! scanner, tokens, INTEGERS, :integer or
