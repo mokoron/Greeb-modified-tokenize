@@ -19,6 +19,7 @@ module Greeb::Tokenizer extend self
   HAPPINESS = /\:\)+/u
   SAD = /\:\(+/u
   HAPPINESS2 = /\:D+/u
+  USERNAME=/\@[\p{L}_\.\-\d]+/
 
   # English and Russian letters.
   #
@@ -66,6 +67,7 @@ module Greeb::Tokenizer extend self
     scanner = Greeb::StringScanner.new(text)
     tokens = []
     while !scanner.eos?
+      parse! scanner, tokens, USERNAME, :letter or
       parse! scanner, tokens, LI, :letter or
       parse! scanner, tokens, NI, :letter or
       parse! scanner, tokens, Bb1, :letter or
