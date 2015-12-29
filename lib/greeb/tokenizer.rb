@@ -19,8 +19,8 @@ module Greeb::Tokenizer extend self
   HAPPINESS = /\:\)+/u
   SAD = /\:\(+/u
   HAPPINESS2 = /\:D+/u
-  EMAIL=/[a-z\_\.\-\d]+\@[a-z\_\.\-\d]+\.[a-z]+/
-  USERNAME=/\@[a-z\_\.\-\d]+/
+  EMAIL=%r{[a-z\_\.\+\%\-\d]+\@[a-z\_\.\-\d]+\.[a-z]+}i
+  USERNAME=%r{\@[a-z\_\.\-\d]+}i
 
   # English and Russian letters.
   #
