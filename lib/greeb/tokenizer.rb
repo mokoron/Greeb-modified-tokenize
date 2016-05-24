@@ -6,22 +6,29 @@ require 'json'
 # <http://www.fileformat.info/info/unicode/category/index.htm>.
 #
 module Greeb::Tokenizer extend self
-  LI = /([\p{L}]+ ли)\b/u
-  NI = /(н[ие] [\p{L}]+)\b/u
-  Bb1 = /([\p{L}]+ бы?)\b/u
-  GEG = /([\p{L}]+ жеж?)\b/u
-  KA = /([\p{L}]+[\- ]ка)\b/u
-  TO = /([\p{L}]+[\- ]то)\b/u
+#  LI = /([\p{L}]+ ли)\b/u
+  NI = /(н[ие] [\p{L}]+)\b/iu
+#  NI = /([нН][иеИЕ] [\p{L}]+)\b/u
+#  Bb1 = /([\p{L}]+ бы?)\b/u
+#  GEG = /([\p{L}]+ жеж?)\b/u
+#  KA = /([\p{L}]+[\- ]ка)\b/u
+#  TO = /([\p{L}]+[\- ]то)\b/u
   TAKI = /(вс[её] ?- ?таки)\b/u
   DATE = /(\d?\d[\.\/]\d?\d[\/ \.]\d{4}|\d?\d[\/ \.]\d?\d[\/ \.]\d{2})/
   DATE2 = /(\d?\d[\/ \.](янв|фев|мар|апр|ма[яй]|июн|июл|авг|сент|окт|ноя|дек)[\p{L}]{0,9}[\/ \.](\d{4}|\d{2}))/
   TIME = /\d?\d[\.\:]\d?\d/
-  HAPPINESS = /\:\)+/u
-  SAD = /\:\(+/u
+  HAPPINESS = /\:-?\)+/u
+  SAD = /\:-?\(+/u
   HAPPINESS2 = /\:D+/u
   EMAIL=%r{[a-z\_\.\+\%\-\d]+\@[a-z\_\.\-\d]+\.[a-z]+}i
   USERNAME=%r{\@[a-z\_\.\-\d]+}i
-
+  HAPPINESS3 = /\=\)+/u  
+  HAPPINESS4 = /\%\)+/u
+  HAPPINESS5 = /\;\)+/u  
+  SAD2 = /\=\(+/u 
+  SAD3 = /\%\(+/u
+  SAD4 = /\;\(+/u      
+  SAD5 = /\|\(+/u    
   # English and Russian letters.
   #
   LETTERS = /[\p{L}]+/u
@@ -70,16 +77,23 @@ module Greeb::Tokenizer extend self
     while !scanner.eos?
       parse! scanner, tokens, EMAIL, :letter or
       parse! scanner, tokens, USERNAME, :letter or
-      parse! scanner, tokens, LI, :letter or
+#      parse! scanner, tokens, LI, :letter or
       parse! scanner, tokens, NI, :letter or
-      parse! scanner, tokens, Bb1, :letter or
-      parse! scanner, tokens, GEG, :letter or
-      parse! scanner, tokens, KA, :letter or
-      parse! scanner, tokens, TO, :letter or
+#      parse! scanner, tokens, Bb1, :letter or
+#      parse! scanner, tokens, GEG, :letter or
+#      parse! scanner, tokens, KA, :letter or
+#      parse! scanner, tokens, TO, :letter or
       parse! scanner, tokens, TAKI, :letter or
       parse! scanner, tokens, HAPPINESS, :letter or
       parse! scanner, tokens, SAD, :letter or
+      parse! scanner, tokens, SAD2, :letter or      
+      parse! scanner, tokens, SAD3, :letter or
+      parse! scanner, tokens, SAD4, :letter or
+      parse! scanner, tokens, SAD5, :letter or      
       parse! scanner, tokens, HAPPINESS2, :letter or
+      parse! scanner, tokens, HAPPINESS3, :letter or
+      parse! scanner, tokens, HAPPINESS4, :letter or 
+      parse! scanner, tokens, HAPPINESS5, :letter or            
       parse! scanner, tokens, DATE, :letter or
       parse! scanner, tokens, DATE2, :letter or
       parse! scanner, tokens, TIME, :letter or
